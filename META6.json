@@ -1,0 +1,39 @@
+{
+  "perl"         : "6.*",
+  "raku"         : "6.*",
+  "name"         : "Regulatum",
+  "description"  : "Programmatic generation of rectangular tiling patterns rendered as SVG output.  With command-line interface.",
+  "version"      : "0.1.0",
+  "api"          : 1,
+  "provides":
+  {
+    "Regulatum"                   : "lib/Regulatum.rakumod",
+    "Regulatum::Service::Colors"  : "lib/Regulatum/Service/Colors.rakumod",
+    "Regulatum::Service::SVG"     : "lib/Regulatum/Service/SVG.rakumod",
+    "Regulatum::Type::Parameters" : "lib/Regulatum/Type/Parameters.rakumod",
+    "Regulatum::Type::Subsets"    : "lib/Regulatum/Type/Subsets.rakumod",
+    "Regulatum::Type::Tile"       : "lib/Regulatum/Type/Tile.rakumod",
+    "Regulatum::Type::Tile_Distribution" : "lib/Regulatum/Type/Tile_Distribution.rakumod",
+    "Regulatum::Type::Verbosity"  : "lib/Regulatum/Type/Verbosity.rakumod"
+  },
+  "depends":
+  [
+    "Getopt::Long",
+    "JSON::Tiny"
+  ],
+  "build-depends": [ ],
+  "test-depends" : [ ],
+  "resources"    : [ ],
+  "auth"         : "github:D29F4",
+  "authors"      : [ "D29F4" ],
+  "license"      : "Artistic-2.0",
+  "source-url"   : "git://github.com/D29F4/Regulatum.git",
+  "tags":
+  [
+    "tiling"
+  ],
+  "custom":
+  {
+    "default_config_path": ".regulatum"
+  }
+}
