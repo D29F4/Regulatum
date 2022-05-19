@@ -414,7 +414,7 @@ any verbose message content is commented out.
 ##  EXAMPLES
 
 <div>
-  <img src="samples/2.svg" style="width: 35%;"></img>
+  <img src="samples/8.svg" style="width: 100%;"></img>
 </div>
 
 This section presents some possible invocations with sample output.
