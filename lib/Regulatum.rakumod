@@ -360,6 +360,11 @@ sub fit_tile
 #|FIX| unless you manually cast the result to List.
   my List @tile_space = @positions.List Z (@positions.List Z+ ($tile.extensions.List));
 
+  #  The maximum extensions permitted by the space given the current
+  #  position.  (Will populate during examination of occupied spaces and
+  #  dimensional limits.)
+  my Extension @max_extensions = Nil xx @dimensions.elems;
+
   #--------------------------------------------------------------------------
   #  Search for overlaps (intersection in all dimensions) of the proposed
   #  tile with occupied spaces.
@@ -403,6 +408,22 @@ sub fit_tile
           #  and the overlap lies ahead of the tile's origin position
           && @tile_space[$dim][0] < $occupied_range[0];
       }
+
+      #  Assign values to the list of maximum extensions per this occupied space
+      #
+      my Int $current_max_ext = ($occupied_range[0] - 1) - @positions[$dim];
+
+      #  Assign a value
+      @max_extensions[$dim] = $current_max_ext
+      #  if (since a tile may always expand freely into the maximum
+      #  dimension) we are inspecting a dimension other than the maximum
+      if $dim < (@dimensions - 1)
+        #  and the overlap lies ahead of the tile's origin position
+        && @positions[$dim] < $occupied_range[0]
+        #  and the maximum extension for this dimension is not set
+        && (@max_extensions[$dim] ~~ Int:U
+          #  or it is larger than the limit currently being examined
+          || (@max_extensions[$dim] > $current_max_ext));
     }
     #________________________________________________________________________
 
@@ -452,6 +473,15 @@ sub fit_tile
     }
   }
 
+  #  Assign the dimensional limit as a maximum extension if a tile isn't
+  #  already in the way
+  for @dimensions.kv -> Index $dim, Dimension $size
+  {
+    @max_extensions[$dim] = $size - 1 - @positions[$dim] if @max_extensions[$dim] ~~ Int:U;
+  }
+  #__________________________________________________________________________
+
+
   #--------------------------------------------------------------------------
   #  If there are no restrictions on placement as-is then accept tile
   #--------------------------------------------------------------------------
@@ -490,92 +520,92 @@ sub fit_tile
     }
 
     #------------------------------------------------------------------------
-    #  Best existing match
-    #  Transformation
+    #  Best existing match (that is: the tile with least overall differential
+    #  relative to available space)
     #------------------------------------------------------------------------
-    when 2..4
+    when 2
     {
-      #  Calculate the new extensions which will fit into the
-      #  newly-restricted space.  (Subtract the current from the end
-      #  positions.)
-      my Extension @max_extensions = (@end_positions.List Z- @positions.List);
+      my %best = 'diff', Int_N, 'tiles', Array[Tile];
 
-      #  Retrieve any tile in the tileset matching the maximum extensions
-      # my @matching_tiles = @tiles.grep({ .extensions eq @max_extensions });
-      my Tile @matching_tiles = @tiles.grep({ $_.extensions.List eq @max_extensions.List });
-
-      #----------------------------------------------------------------------
-      #  An available tile matches; accept it
-      #----------------------------------------------------------------------
-      return (@matching_tiles[0], @end_positions) if @matching_tiles;
-
-      #----------------------------------------------------------------------
-      #  Best existing match
-      #----------------------------------------------------------------------
-      when 2
+      #  Scan the full tileset
+      for @tiles
       {
-        my %best = 'diff', Int_N, 'tiles', Array[Tile];
+        #  (Ignoring the proposed tile)
+        next if $_.extensions eq $tile.extensions;
 
-        #  Scan the full tileset
-        for @tiles
+        #  Find the differential between this tile's extensions and the maximum
+        my $diff = @max_extensions.List >>->> $_.extensions.List;
+
+        #  If this tile is compatible with the maximum extensions
+        if $diff.all >= 0
         {
-          #  (Ignoring the proposed tile)
-          next if $_ eq $tile.extensions;
+          #  A zero differential is optimum; find the one(s) closest to zero
+          #
+          my Int_N $diff_sum = $diff.sum;
 
-          #  Find the differential between this tile's extensions and the maximum
-          my $diff = @max_extensions.List >>->> $_.extensions.List;
-
-          #  If this tile is compatible with the maximum extensions
-          if $diff.all >= 0
+          if %best<diff> ~~ Int:D
           {
-            # #  A zero differential is optimum; find the one(s) closest to zero
-            # my $diff_sum = $diff.sum;
-            # if %best<diff> ~~ Int_N:U || $diff_sum < %best<diff>
-            # {
-            #   %best<diff> = $diff_sum;
-            #   %best<tiles>.push: $_;
-            # }
-
-            #  A zero differential is optimum; find the one(s) closest to zero
-            #
-            my Int_N $diff_sum = $diff.sum;
-
-            if %best<diff> ~~ Int:D
-            {
-              if $diff_sum < %best<diff>
-              {
-                %best<diff> = $diff_sum;
-                %best<tiles> = [$_];
-              }
-              elsif $diff_sum == %best<diff>
-              {
-                %best<tiles>.push: $_;
-              }
-            }
-            else
+            if $diff_sum < %best<diff>
             {
               %best<diff> = $diff_sum;
+              %best<tiles> = [$_];
+            }
+            elsif $diff_sum == %best<diff>
+            {
               %best<tiles>.push: $_;
             }
           }
+          else
+          {
+            %best<diff> = $diff_sum;
+            %best<tiles>.push: $_;
+          }
         }
-
-        #  Either return an appropriate tile or continue
-        return (%best<tiles>.pick, @end_positions) if %best<diff> ~~ Int:D;
-        next;
       }
 
+      #  Either return an appropriate tile or continue
+      return (%best<tiles>.pick, @end_positions) if %best<diff> ~~ Int:D;
+
+      next;
+    }
+
+    #------------------------------------------------------------------------
+    #  Transformation (shrinking tile in one or more dimensions)
+    #------------------------------------------------------------------------
+    when 3..4
+    {
+      #  Select tiles from the existing tileset where
+      my Tile @matching_tiles = @tiles.grep({
+        #  the tile will fit within the current space
+        so (@max_extensions.List <<>=>> $_.extensions.List).all
+        #  and at least one of its dimensions is smaller than that of the
+        #  original proposed tile
+        && so ($tile.extensions.List <<>=>> $_.extensions.List)
+      });
+
       #----------------------------------------------------------------------
-      #  Transformation
+      #  At least one available tile matches; choose one
+      #----------------------------------------------------------------------
+      return (@matching_tiles.pick, @end_positions) if @matching_tiles;
+
       #----------------------------------------------------------------------
       #  No available tile matches
-      #
+      #----------------------------------------------------------------------
       #  The fit tactic restricts by available tiles; continue
       next when 3;
 
-      #  The fit tactic (4) is not restricted by available tiles;
-      #  create a tile satisfying the maximum extensions
-      return (Tile.new(extensions => @max_extensions), @end_positions);
+      #  The fit tactic (4) is not restricted by available tiles; create a
+      #  tile as close as possible in shape to the proposed tile while
+      #  respecting space limitations.  (That is: shrink to fit.)
+      return (
+        Tile.new(extensions =>
+          (@positions >>+>> $tile.extensions).kv.map(-> Index $dim, Extension $ext {
+            $ext >= @end_positions[$dim]
+              ?? @end_positions[$dim] - @positions[$dim]
+              !! $ext
+          })),
+        @end_positions
+      );
     }
 
     #------------------------------------------------------------------------

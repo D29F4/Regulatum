@@ -3,46 +3,46 @@
   -t '[[2, 1, "#3F3F2F", 21], [3, 1, "#4F4F3F", 31], [5, 1, "#5F5F4F", 26], [8, 1, "#696959", 22]]' \
   -f '[2, 1]' \
   -s 20 \
-  -c "#3F3F2F" \
+  -c "#3F3F2F"
 -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1259 62">
-<rect x="0" y="0" width="62" height="20" fill="#4F4F3F"></rect>
-<rect x="63" y="0" width="167" height="20" fill="#696959"></rect>
-<rect x="231" y="0" width="62" height="20" fill="#4F4F3F"></rect>
-<rect x="294" y="0" width="104" height="20" fill="#5F5F4F"></rect>
-<rect x="399" y="0" width="104" height="20" fill="#5F5F4F"></rect>
-<rect x="504" y="0" width="62" height="20" fill="#4F4F3F"></rect>
-<rect x="567" y="0" width="104" height="20" fill="#5F5F4F"></rect>
-<rect x="672" y="0" width="167" height="20" fill="#696959"></rect>
-<rect x="840" y="0" width="62" height="20" fill="#4F4F3F"></rect>
-<rect x="903" y="0" width="62" height="20" fill="#4F4F3F"></rect>
-<rect x="966" y="0" width="62" height="20" fill="#4F4F3F"></rect>
-<rect x="1029" y="0" width="41" height="20" fill="#3F3F2F"></rect>
-<rect x="1071" y="0" width="167" height="20" fill="#696959"></rect>
-<rect x="1239" y="0" width="20" height="20" fill="#3F3F2F"></rect>
+<rect x="0" y="0" width="41" height="20" fill="#3F3F2F"></rect>
+<rect x="42" y="0" width="104" height="20" fill="#5F5F4F"></rect>
+<rect x="147" y="0" width="41" height="20" fill="#3F3F2F"></rect>
+<rect x="189" y="0" width="104" height="20" fill="#5F5F4F"></rect>
+<rect x="294" y="0" width="62" height="20" fill="#4F4F3F"></rect>
+<rect x="357" y="0" width="167" height="20" fill="#696959"></rect>
+<rect x="525" y="0" width="62" height="20" fill="#4F4F3F"></rect>
+<rect x="588" y="0" width="41" height="20" fill="#3F3F2F"></rect>
+<rect x="630" y="0" width="62" height="20" fill="#4F4F3F"></rect>
+<rect x="693" y="0" width="62" height="20" fill="#4F4F3F"></rect>
+<rect x="756" y="0" width="104" height="20" fill="#5F5F4F"></rect>
+<rect x="861" y="0" width="167" height="20" fill="#696959"></rect>
+<rect x="1029" y="0" width="167" height="20" fill="#696959"></rect>
+<rect x="1197" y="0" width="62" height="20" fill="#4F4F3F"></rect>
 <rect x="0" y="21" width="167" height="20" fill="#696959"></rect>
-<rect x="168" y="21" width="104" height="20" fill="#5F5F4F"></rect>
-<rect x="273" y="21" width="104" height="20" fill="#5F5F4F"></rect>
-<rect x="378" y="21" width="62" height="20" fill="#4F4F3F"></rect>
-<rect x="441" y="21" width="62" height="20" fill="#4F4F3F"></rect>
-<rect x="504" y="21" width="167" height="20" fill="#696959"></rect>
-<rect x="672" y="21" width="104" height="20" fill="#5F5F4F"></rect>
-<rect x="777" y="21" width="104" height="20" fill="#5F5F4F"></rect>
-<rect x="882" y="21" width="104" height="20" fill="#5F5F4F"></rect>
-<rect x="987" y="21" width="167" height="20" fill="#696959"></rect>
-<rect x="1155" y="21" width="104" height="20" fill="#5F5F4F"></rect>
-<rect x="0" y="42" width="62" height="20" fill="#4F4F3F"></rect>
-<rect x="63" y="42" width="104" height="20" fill="#5F5F4F"></rect>
-<rect x="168" y="42" width="167" height="20" fill="#696959"></rect>
-<rect x="336" y="42" width="62" height="20" fill="#4F4F3F"></rect>
-<rect x="399" y="42" width="62" height="20" fill="#4F4F3F"></rect>
-<rect x="462" y="42" width="62" height="20" fill="#4F4F3F"></rect>
-<rect x="525" y="42" width="62" height="20" fill="#4F4F3F"></rect>
+<rect x="168" y="21" width="167" height="20" fill="#696959"></rect>
+<rect x="336" y="21" width="62" height="20" fill="#4F4F3F"></rect>
+<rect x="399" y="21" width="62" height="20" fill="#4F4F3F"></rect>
+<rect x="462" y="21" width="62" height="20" fill="#4F4F3F"></rect>
+<rect x="525" y="21" width="41" height="20" fill="#3F3F2F"></rect>
+<rect x="567" y="21" width="167" height="20" fill="#696959"></rect>
+<rect x="735" y="21" width="167" height="20" fill="#696959"></rect>
+<rect x="903" y="21" width="104" height="20" fill="#5F5F4F"></rect>
+<rect x="1008" y="21" width="62" height="20" fill="#4F4F3F"></rect>
+<rect x="1071" y="21" width="62" height="20" fill="#4F4F3F"></rect>
+<rect x="1134" y="21" width="104" height="20" fill="#5F5F4F"></rect>
+<rect x="1239" y="21" width="20" height="20" fill="#3F3F2F"></rect>
+<rect x="0" y="42" width="104" height="20" fill="#5F5F4F"></rect>
+<rect x="105" y="42" width="41" height="20" fill="#3F3F2F"></rect>
+<rect x="147" y="42" width="104" height="20" fill="#5F5F4F"></rect>
+<rect x="252" y="42" width="167" height="20" fill="#696959"></rect>
+<rect x="420" y="42" width="167" height="20" fill="#696959"></rect>
 <rect x="588" y="42" width="62" height="20" fill="#4F4F3F"></rect>
-<rect x="651" y="42" width="104" height="20" fill="#5F5F4F"></rect>
-<rect x="756" y="42" width="167" height="20" fill="#696959"></rect>
+<rect x="651" y="42" width="62" height="20" fill="#4F4F3F"></rect>
+<rect x="714" y="42" width="104" height="20" fill="#5F5F4F"></rect>
+<rect x="819" y="42" width="104" height="20" fill="#5F5F4F"></rect>
 <rect x="924" y="42" width="104" height="20" fill="#5F5F4F"></rect>
-<rect x="1029" y="42" width="104" height="20" fill="#5F5F4F"></rect>
-<rect x="1134" y="42" width="104" height="20" fill="#5F5F4F"></rect>
-<rect x="1239" y="42" width="20" height="20" fill="#3F3F2F"></rect>
+<rect x="1029" y="42" width="167" height="20" fill="#696959"></rect>
+<rect x="1197" y="42" width="62" height="20" fill="#4F4F3F"></rect>
 </svg>

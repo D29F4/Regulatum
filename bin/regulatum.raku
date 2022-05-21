@@ -1152,7 +1152,10 @@ three- or six-digit hexadecimal notation.
 --------------------------------------------------------------------------------
   Best existing match
 --------------------------------------------------------------------------------
-  2: Select the best-fitting tile from the tileset if one exists.
+  2: Select the best-fitting tile from the tileset if one exists.  Currently
+     this means choosing the tile with the smallest overall distance from the
+     boundaries of available space.  If multiple tiles happens to have the same
+     differential ranking then one of them is chosen at random.
 
 --------------------------------------------------------------------------------
   Transformation (reduction)
@@ -1165,8 +1168,9 @@ three- or six-digit hexadecimal notation.
      necessary dimensions has been defined.
 
   4: (Not restricted by available tiles.)  If a tile with the necessary
-     dimensions has been defined then it will be used; otherwise generate a tile
-     ad-hoc to the necessary specifications.
+     dimensions has been defined then it will be used; otherwise generate an
+     ad-hoc tile.  Per the above specification, said tile should possess
+     extensions as close to the original proposed tile as possible.
 
 --------------------------------------------------------------------------------
   Rotation (reorientation)
@@ -1270,12 +1274,12 @@ any verbose message content is commented out.
   EXAMPLES
 --------------------------------------------------------------------------------
 Specifying four tiles, two square and two of unequal sides, to be laid on a
-12-by-12 grid with unequal probability; resort (first) to best-fit
-alternatives and (then) to one-unit pink tiles when necessary.
+12-by-12 grid with unequal probability; resort (first) to shrinking proposed
+tiles and (then) to one-unit pink tiles when necessary.
 
   regulatum -d '[12,12]' \
             -t '[[2,2,"#8F7FDF",8], [1,3,"#A68CB3",23], [3,1,"#838CC3",23], [1,2,"#999FB9",23], [2,1,"#C69F9F",23]]' \
-            -f '[2,1]' \
+            -f '[4,1]' \
             -c pink
 
 Produce a moderately-spaced mosaic of randomly-colored squares in a horizontal
