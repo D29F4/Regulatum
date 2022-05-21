@@ -32,7 +32,7 @@ sub generate(Parameters $parameters --> Int_N) is export
   #  The maximum dimensional index of the space
   my Index $maximum_dim = @positions - 1;
 
-  #  Tracks tiles which may affect the current inning
+  #  Tracks spaces of the domain which may affect the current inning
   my List @occupied_spaces;
 
   #  Total number of tiles laid
@@ -103,7 +103,7 @@ sub generate(Parameters $parameters --> Int_N) is export
             #  Condition 1 above has been satisfied; no need to check for
             #  intersections
             (push @obsolete_spaces, $space_index) && last
-              if $occupied_range[1] < @positions[$dim];
+            if $occupied_range[1] < @positions[$dim];
 
             #  The maximum range is equal to the current position
             $largest_dim_equal = True;
@@ -116,7 +116,7 @@ sub generate(Parameters $parameters --> Int_N) is export
 
             #  Condition 2 above has been fully satisfied
             (push @obsolete_spaces, $space_index) && last
-              if $largest_dim_equal && $obsolete_point_count == $maximum_dim;
+            if $largest_dim_equal && $obsolete_point_count == $maximum_dim;
           }
         }
 
@@ -125,8 +125,8 @@ sub generate(Parameters $parameters --> Int_N) is export
         #  this dimension
         #--------------------------------------------------------------------
         ++$position_conflict_count
-          if   @positions[$dim] <= $occupied_range[1]
-            && @positions[$dim] >= $occupied_range[0];
+        if   @positions[$dim] <= $occupied_range[1]
+          && @positions[$dim] >= $occupied_range[0];
       }
       #______________________________________________________________________
 
@@ -198,7 +198,7 @@ sub generate(Parameters $parameters --> Int_N) is export
       push @occupied_spaces,
         #  Contribute list of min, max pairs for each dimension to @occupied_spaces
         (@positions.List Z (@positions.List Z+ ($tile.extensions.List))).List
-        if $tile.extensions.all != 0;
+      if $tile.extensions.all != 0;
 
       #  Advance (beyond latest tile)
       @positions[0] += $tile.extensions[0] + 1;
@@ -374,8 +374,8 @@ sub fit_tile
   #--------------------------------------------------------------------------
   for @occupied_spaces -> @occupied_space
   {
-    #  Boundary positions for this occupied space
-    my Position @boundaries = Nil xx @dimensions.elems;
+    #  Boundary positions for this occupied space relative to the proposed tile
+    my Position @tile_boundaries = Nil xx @dimensions.elems;
 
     #  Count of total number of dimensional intersections found
     my Int_N $intersection_count = 0;
@@ -386,6 +386,9 @@ sub fit_tile
     #|TYPE| List actually List[Position]
     for @occupied_space.kv -> Index $dim, List $occupied_range
     {
+      #  Determine the boundaries of the tile per the limitations of this
+      #  occupied space
+      #
       #  Determine if an intersection in this dimension exists
       if   @tile_space[$dim][0] <= $occupied_range[1]
         && @tile_space[$dim][1] >= $occupied_range[0]
@@ -393,12 +396,12 @@ sub fit_tile
         ++$intersection_count;
 
         #  Treat the minimum position of the limiting point as a boundary
-        @boundaries[$dim] = ($occupied_range[0] - 1)
-          #  if (since a tile may always expand freely into the maximum
-          #  dimension) we are inspecting a dimension other than the maximum
-          if $dim < (@dimensions - 1)
-            #  and the overlap lies ahead of the tile's core position
-            && @tile_space[$dim][0] < $occupied_range[0];
+        @tile_boundaries[$dim] = ($occupied_range[0] - 1)
+        #  if (since a tile may always expand freely into the maximum
+        #  dimension) we are inspecting a dimension other than the maximum
+        if $dim < (@dimensions - 1)
+          #  and the overlap lies ahead of the tile's origin position
+          && @tile_space[$dim][0] < $occupied_range[0];
       }
     }
     #________________________________________________________________________
@@ -417,10 +420,10 @@ sub fit_tile
         #  If the current ending position is not defined
         ($position ~~ Int:U)
         #  or the latest boundary position is closer than the current ending position
-        || ((@boundaries[$dim] ~~ Int:D) && ($position > @boundaries[$dim]))
+        || ((@tile_boundaries[$dim] ~~ Int:D) && ($position > @tile_boundaries[$dim]))
       )
         #  Use the latest boundary value
-        ?? (@boundaries[$dim] // Nil)
+        ?? (@tile_boundaries[$dim] // Nil)
         #  Retain the current ending position (which may be undefined)
         !! $position;
     #  If overlap is found
@@ -445,15 +448,13 @@ sub fit_tile
       #  but this position does exceed the respective dimensional limit then
       #  use said limit to assign the appropriate ending position.
       @end_positions[$dim] = $size - 1
-        #if (@end_positions[$dim] !~~ Int:D) && @end_positions_orig[$dim] >= $size;
-        if (@end_positions[$dim] ~~ Int:U) && @end_positions_orig[$dim] >= $size;
+      if (@end_positions[$dim] ~~ Int:U) && @end_positions_orig[$dim] >= $size;
     }
   }
 
   #--------------------------------------------------------------------------
   #  If there are no restrictions on placement as-is then accept tile
   #--------------------------------------------------------------------------
-  #my Bool $accept = so !(@end_positions.any ~~ Int:D);
   my Bool $accept = so (@end_positions.all ~~ Int:U);
 
   #--------------------------------------------------------------------------
@@ -467,8 +468,7 @@ sub fit_tile
   for $tile.extensions.kv -> Index $dim, Extension $extension
   {
     @end_positions[$dim] = @positions[$dim] + $extension
-      #if @end_positions[$dim] !~~ Int:D;
-      if @end_positions[$dim] ~~ Int:U;
+    if @end_positions[$dim] ~~ Int:U;
   }
 
   #--------------------------------------------------------------------------
