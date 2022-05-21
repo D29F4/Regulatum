@@ -1295,7 +1295,7 @@ directory.
 
   regulatum -d '[10,20]' -t '[[1,1,"",40], [2,2,"",60]]' \
             -C '["darkslategrey", "darkslateblue", "#6F1C2A"]' \
-            -m random-colors -f '[2,1]' -o ~/tiles.svg
+            -m random-colors -f '[1]' -o ~/tiles.svg
 
 A pattern somewhat reminiscent of a complicated city plan.
 
